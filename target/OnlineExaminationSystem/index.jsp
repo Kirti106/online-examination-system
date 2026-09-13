@@ -95,46 +95,27 @@
 </head>
 
 <body>
-
     <div class="login-container">
-
         <h1>Online Examination</h1>
         <p>Login to continue</p>
 
         <form action="login" method="post">
-
             <div class="form-group">
                 <label for="email">Email</label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    required>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    required>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
             </div>
 
-            <button type="submit" class="login-btn">
-                Login
-            </button>
-
+            <button type="submit" class="login-btn">Login</button>
         </form>
 
-        <div class="register">
-            Don't have an account?
+        <div class="register"> Don't have an account?
             <a href="register.jsp">Register</a>
         </div>
-
     </div>
-
 </body>
 </html>
