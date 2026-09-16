@@ -13,12 +13,20 @@ public class UserDAO {
         ) {
             statement.setString(1, email);
             statement.setString(2, password);
+            System.out.println("Login email received: " + email);
             ResultSet resultSet = statement.executeQuery();
+
             if (resultSet.next()) {
-                return resultSet.getString("role");
+                String role = resultSet.getString("role");
+                System.out.println("LOGIN SUCCESS - Role: " + role);
+                return role;
+            } 
+            else {
+                System.out.println("LOGIN FAILED - No matching user found.");
             }
         } 
         catch (Exception e) {
+            System.out.println("DATABASE ERROR:");
             e.printStackTrace();
         }
         return null;

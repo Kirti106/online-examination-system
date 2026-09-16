@@ -21,10 +21,10 @@ public class LoginServlet extends HttpServlet {
         String role = userDAO.validateUser(email, password);
 
         if ("ADMIN".equals(role)) {
-            response.sendRedirect("adminDashboard.jsp");
+            response.sendRedirect("admindashboard.jsp");
         } 
         else if ("STUDENT".equals(role)) {
-            response.sendRedirect("studentDashboard.jsp");
+            response.sendRedirect("studentdashboard.jsp");
         } 
         else {
             response.sendRedirect("index.jsp?error=invalid");
