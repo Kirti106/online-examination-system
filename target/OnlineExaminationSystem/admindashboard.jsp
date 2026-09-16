@@ -59,6 +59,20 @@
             text-decoration: none;
             border-radius: 7px;
         }
+
+        .results-btn {
+            display: inline-block;
+            padding: 12px 22px;
+            background: #6378e8;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 10px;
+        }
+
+        .results-btn:hover {
+            background: #4f63d4;
+        }
     </style>
 </head>
 
@@ -91,7 +105,7 @@
             <div class="card">
                 <h2>Results</h2>
                 <p>View student examination results.</p>
-                <a href="#" class="btn">View Results</a>
+                <a href="admindashboard.jsp" class="results-btn">View Student Results</a>
             </div>
         </div>
     </div>

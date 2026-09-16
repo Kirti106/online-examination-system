@@ -31,4 +31,22 @@ public class UserDAO {
         }
         return null;
     }
+
+    public int getUserIdByEmail(String email) {
+        String sql = "SELECT user_id FROM users WHERE email = ?";
+        try (
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("user_id");
+            }
+        } 
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 }
