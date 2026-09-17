@@ -1,6 +1,7 @@
 package com.onlineexam.servlet;
 import com.onlineexam.dao.ResultDAO;
 import com.onlineexam.dao.EvaluationDAO;
+import com.onlineexam.dao.AnswerDAO;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -44,6 +45,12 @@ public class SubmitExamServlet extends HttpServlet {
             }
         }
 
+        AnswerDAO answerDAO = new AnswerDAO();
+        boolean answersSaved = answerDAO.saveAnswers(userId, examId, answers);
+        if (!answersSaved) {
+            System.out.println("WARNING: Answers were not saved.");
+        }
+        
         EvaluationDAO evaluationDAO = new EvaluationDAO();
 
         int score = evaluationDAO.calculateScore(examId, userId, answers);

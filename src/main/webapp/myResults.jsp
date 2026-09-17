@@ -2,6 +2,11 @@
 <%@ page import="com.onlineexam.dao.StudentResultDAO" %>
 
 <%
+    String role = (String) session.getAttribute("role");
+    if (!"STUDENT".equals(role)) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
     Integer userId =(Integer) session.getAttribute("userId");
     if (userId == null) {
         response.sendRedirect("index.jsp");
@@ -132,7 +137,7 @@
                         </table>
                         <% } %>
                             <a href="studentdashboard.jsp" class="back-btn">
-                                ← Back to Dashboard
+                                Back to Dashboard
                             </a>
             </div>
         </div>

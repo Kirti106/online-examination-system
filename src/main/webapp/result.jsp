@@ -4,6 +4,11 @@
 <%@ page import="com.onlineexam.dao.EvaluationDAO" %>
 
 <%
+    String role = (String) session.getAttribute("role");
+    if (!"STUDENT".equals(role)) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
     Integer score = (Integer) session.getAttribute("score");
     Integer examId = (Integer) session.getAttribute("examId");
 
@@ -221,33 +226,42 @@
                         Not Answered
                     <% } %>
                 </div>
+                <% if (selectedAnswer == null || selectedAnswer.equals("-")) { %>
 
-                <% if (isCorrect) { %>
-                    <div class="status correct-text">
-                        ✓ Correct Answer
-                    </div>
+    <div class="status not-attempted">
+        Not Attempted
+    </div>
 
-                <% } else { %>
-                    <div class="answer">
-                        <strong>Correct Answer:</strong>
-                        <span class="correct-text">
-                            <%= correctAnswer %>. <%= correctText %>
-                        </span>
-                    </div>
+    <div class="answer">
+        <strong>Correct Answer:</strong>
+        <span class="correct-text">
+            <%= correctAnswer %>. <%= correctText %>
+        </span>
+    </div>
 
-                    <div class="status wrong-text">
-                        ✗ Wrong Answer
-                    </div>
-        
-                    <% } %>
+        <% } else if (isCorrect) { %>
+            <div class="status correct-text">
+                Correct Answer
+            </div>
+
+        <% } else { %>
+            <div class="answer">
+                <strong>Correct Answer:</strong>
+                <span class="correct-text">
+                    <%= correctAnswer %>. <%= correctText %>
+                </span>
+            </div>
+
+            <div class="status wrong-text">
+                Wrong Answer
+            </div>
+
+        <% } %>
                 </div>
-            
                 <%
                     questionNumber++;
-            
                 }
                 %>
-        
                 <div style="text-align:center;">
                     <a href="studentdashboard.jsp" class="dashboard-btn">
                         Back to Dashboard

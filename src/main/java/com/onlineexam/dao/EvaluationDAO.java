@@ -38,74 +38,78 @@ public class EvaluationDAO {
         return score;
     }
 
-    public List<String[]> getAnswerDetails( int examId, Map<Integer, String> answers) {
+    public List<String[]> getAnswerDetails(int examId, Map<Integer, String> answers) {
         List<String[]> details = new ArrayList<>();
-
-        String sql = "SELECT question_id, question_text, " +
-                     "option_a, option_b, option_c, option_d, " +
-                     "correct_answer, marks " +
-                     "FROM questions " +
-                     "WHERE question_id = ? AND exam_id = ?";
+        String sql =
+                "SELECT question_id, question_text, " +
+                "option_a, option_b, option_c, option_d, " +
+                "correct_answer, marks " +
+                "FROM questions " +
+                "WHERE exam_id = ? " +
+                "ORDER BY question_id";
 
         try (
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)
         ) {
-            for (Integer questionId : answers.keySet()) {
-                statement.setInt(1, questionId);
-                statement.setInt(2, examId);
-                ResultSet resultSet = statement.executeQuery();
+            statement.setInt(1, examId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int questionId = resultSet.getInt("question_id");
+                String questionText = resultSet.getString("question_text");
+                String optionA = resultSet.getString("option_a");
+                String optionB = resultSet.getString("option_b");
+                String optionC = resultSet.getString("option_c");
+                String optionD = resultSet.getString("option_d");
+                String correctAnswer = resultSet.getString("correct_answer");
+                String selectedAnswer = answers.get(questionId);
+                String selectedText = "Not Attempted";
+                String correctText = "";
 
-                if (resultSet.next()) {
-                    String selectedAnswer = answers.get(questionId);
-                    String correctAnswer = resultSet.getString("correct_answer");
-                    String selectedText = "";
-
-                    if ("A".equals(selectedAnswer)) {
-                        selectedText = resultSet.getString("option_a");
+                if (selectedAnswer != null) {
+                    if (selectedAnswer.equals("A")) {
+                        selectedText = optionA;
                     } 
-                    else if ("B".equals(selectedAnswer)) {
-                        selectedText = resultSet.getString("option_b");
+                    else if (selectedAnswer.equals("B")) {
+                        selectedText = optionB;
                     } 
-                    else if ("C".equals(selectedAnswer)) {
-                        selectedText = resultSet.getString("option_c");
+                    else if (selectedAnswer.equals("C")) {
+                        selectedText = optionC;
                     } 
-                    else if ("D".equals(selectedAnswer)) {
-                        selectedText = resultSet.getString("option_d");
+                    else if (selectedAnswer.equals("D")) {
+                        selectedText = optionD;
                     }
-
-                    String correctText = "";
-                    if ("A".equals(correctAnswer)) {
-                        correctText = resultSet.getString("option_a");
-                    } 
-                    else if ("B".equals(correctAnswer)) {
-                        correctText = resultSet.getString("option_b");
-                    } 
-                    else if ("C".equals(correctAnswer)) {
-                        correctText = resultSet.getString("option_c");
-                    } 
-                    else if ("D".equals(correctAnswer)) {
-                        correctText = resultSet.getString("option_d");
-                    }
-
-                    String status;
-                    if (selectedAnswer.equals(correctAnswer)) {
-                        status = "Correct";
-                    } 
-                    else {
-                        status = "Wrong";
-                    }
-
-                    details.add(new String[] {
-                        String.valueOf( resultSet.getInt("question_id")),
-                        resultSet.getString("question_text"),
-                        selectedAnswer,
-                        selectedText,
-                        correctAnswer,
-                        correctText,
-                        status
-                    });
                 }
+
+                if (correctAnswer.equals("A")) {
+                    correctText = optionA;
+                } 
+                else if (correctAnswer.equals("B")) {
+                    correctText = optionB;
+                } 
+                else if (correctAnswer.equals("C")) {
+                    correctText = optionC;
+                } 
+                else if (correctAnswer.equals("D")) {
+                    correctText = optionD;
+                }
+
+                String status;
+                if (selectedAnswer == null) {
+                    status = "Not Attempted";
+                } 
+                else if (selectedAnswer.equals(correctAnswer)) {
+                    status = "Correct";
+                } 
+                else {
+                    status = "Wrong";
+                }
+
+                String[] detail = { String.valueOf(questionId),
+                    questionText, selectedAnswer == null ? "-" : selectedAnswer,
+                    selectedText, correctAnswer, correctText, status
+                };
+                details.add(detail);
             }
         } 
         catch (Exception e) {

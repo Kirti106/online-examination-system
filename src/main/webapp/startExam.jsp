@@ -1,11 +1,24 @@
+<%
+    String role = (String) session.getAttribute("role");
+    if (!"STUDENT".equals(role)) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
+%>
+
 <%@ page import="java.util.List" %>
 <%@ page import="com.onlineexam.dao.StudentQuestionDAO" %>
 <%@ page import="com.onlineexam.dao.ExamDAO" %>
+<%@ page import="com.onlineexam.thread.ExamTimer" %>
 
 <%
     int examId = Integer.parseInt(request.getParameter("examId"));
     ExamDAO examDAO = new ExamDAO();
     String[] exam = examDAO.getExamById(examId);
+    int duration = Integer.parseInt(exam[3]);
+    ExamTimer examTimer = new ExamTimer(duration);
+    examTimer.start();
+
     StudentQuestionDAO questionDAO = new StudentQuestionDAO();
     List<String[]> questions = questionDAO.getQuestionsByExam(examId);
 %>
@@ -28,6 +41,25 @@
                 color: white;
                 padding: 25px;
                 text-align: center;
+            }
+
+            .timer-box {
+                text-align: center;
+                font-size: 24px;
+                font-weight: bold;
+                padding: 15px;
+                margin: 20px 0;
+                background: #ffffff;
+                color: #333333;
+                border: 2px solid #6378e8;
+                border-radius: 10px;
+                box-shadow: 0 3px 8px rgba(0 ,0 ,0 , 0.015);
+            }
+            @timer {
+                color: #d32f2f;
+                font-size: 26px;
+                font-weight: bold;
+                margin-left: 8px;
             }
 
             .container {
@@ -104,6 +136,10 @@
                     |
                     Duration: <%= exam[3] %> minutes
                 </p>
+                <div class="timer-box">
+                    Time Remaining:
+                    <span id="timer">00:00</span>
+                </div>
             <% } %>
         </header>
 
@@ -118,7 +154,7 @@
                 </div>
             <% } else { %>
 
-            <form action="submitExam" method="post">
+            <form id="examForm" action="submitExam" method="post">
                 <input type="hidden" name="examId" value="<%= examId %>">
 
                 <div class="exam-info">
@@ -170,5 +206,23 @@
             </form>
             <% } %>
         </div>
+
+        <script>
+            let timeRemaining = <%= duration %> * 60;
+            const timer = document.getElementById("timer");
+            const countdown = setInterval(function() {
+                let minutes = Math.floor(timeRemaining / 60);
+                let seconds = timeRemaining % 60;
+                minutes = String(minutes).padStart(2, '0');
+                seconds = String(seconds).padStart(2, '0');
+                timer.textContent = minutes + ":" + seconds;
+                if (timeRemaining <= 0) {
+                    clearInterval(countdown);
+                    alert("Time is up! Your exam will be submitted.");
+                    document.getElementById("examForm").submit();
+                }
+                timeRemaining--;
+            }, 1000);
+        </script>
     </body>
 </html>

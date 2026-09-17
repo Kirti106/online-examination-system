@@ -40,6 +40,28 @@
             margin-bottom: 30px;
         }
 
+        .error-message {
+            color: #d32f2f;
+            background: #ffebee;
+            border: 1px solid #ef9a9a;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .success-message {
+            color: #2e7d32;
+            background: #e8f5e9;
+            border: 1px solid #81c784;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -98,6 +120,31 @@
     <div class="login-container">
         <h1>Online Examination</h1>
         <p>Login to continue</p>
+
+        <%
+            String error = request.getParameter("error");
+            String registered = request.getParameter("registered");
+
+            if ("invalid".equals(error)) {
+        %>
+            <p class="error-message">
+                Invalid email or password. Please try again.
+            </p>
+        <%
+            } else if ("empty".equals(error)) {
+        %>
+            <p class="error-message">
+                Email and password cannot be empty.
+            </p>
+        <%
+            } else if ("success".equals(registered)) {
+        %>
+            <p class="success-message">
+                Registration successful! You can now login.
+            </p>
+        <%
+            }
+        %>
 
         <form action="login" method="post">
             <div class="form-group">

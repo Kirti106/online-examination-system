@@ -1,3 +1,11 @@
+<%
+    String role = (String) session.getAttribute("role");
+    if (!"STUDENT".equals(role)) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
+%>
+
 <%@ page import="java.util.List" %>
 <%@ page import="com.onlineexam.dao.StudentExamDAO" %>
 
@@ -124,6 +132,19 @@
             .start-btn:hover {
                 background: #4f63d4;
             }
+            .logout-btn {
+            display: inline-block;
+            padding: 12px 22px;
+            background: #d32f2f;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 10px;
+        }
+
+        .logout-btn:hover {
+            background: #b71c1c;
+        }
         </style>
     </head>
 
@@ -133,7 +154,7 @@
         </div>
         <div class="container">
             <div class="welcome">
-                <h2>Welcome, Student! 👋</h2>
+                <h2>Welcome, Student!</h2>
                 <p>You can view and attempt available examinations from here.</p>
             </div>
 
@@ -141,7 +162,7 @@
                 <div class="card">
                     <h2>Exams</h2>
                     <p>View available examinations.</p>
-                    <a href="#" class="btn">View Exams</a>
+                    <a href="studentdashboard.jsp" class="btn">View Exams</a>
                 </div>
                 <div class="card">
                     <h2>Results</h2>
@@ -150,7 +171,7 @@
                 </div>
             </div>
 
-            <div class="exam-section">
+            <div class="exam-section" id="availableExams">
                 <h2>Available Exams</h2>
                 <% if (exams.isEmpty()) { %>
                     <p>No exams are currently available.</p>
@@ -179,6 +200,7 @@
                     </div>
                 <% } %>
             </div>
+            <a href="logout" class="logout-btn">Logout</a>
         </div>
     </body>
 </html>

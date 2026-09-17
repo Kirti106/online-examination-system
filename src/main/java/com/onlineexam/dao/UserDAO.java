@@ -1,11 +1,23 @@
 package com.onlineexam.dao;
 import com.onlineexam.util.DBConnection;
+
+import com.onlineexam.exception.InvalidLoginException;
+import com.onlineexam.exception.EmptyFieldException;
+import com.onlineexam.exception.EmailAlreadyExistsException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class UserDAO {
-    public String validateUser(String email, String password) {
+    public String validateUser(String email, String password) throws InvalidLoginException, EmptyFieldException {
+        if (email == null || email.trim().isEmpty()
+                || password == null || password.trim().isEmpty()) {
+            throw new EmptyFieldException(
+                "Email and password cannot be empty"
+            );
+        }
+
         String sql = "SELECT role FROM users WHERE email = ? AND password = ?";
         try (
             Connection connection = DBConnection.getConnection();
@@ -23,7 +35,11 @@ public class UserDAO {
             } 
             else {
                 System.out.println("LOGIN FAILED - No matching user found.");
+                throw new InvalidLoginException("Invlid email or password");
             }
+        }
+        catch (InvalidLoginException e) {
+            throw e;
         } 
         catch (Exception e) {
             System.out.println("DATABASE ERROR:");
@@ -48,5 +64,30 @@ public class UserDAO {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    public boolean registerStudent(String name, String email, String password) throws EmailAlreadyExistsException{
+        String sql =
+                "INSERT INTO users (name, email, password, role) " +
+                "VALUES (?, ?, ?, 'STUDENT')";
+
+        try (
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setString(1, name);
+            statement.setString(2, email);
+            statement.setString(3, password);
+
+            int rows = statement.executeUpdate();
+            return rows > 0;
+        } 
+        catch (java.sql.SQLIntegrityConstraintViolationException e) {
+            throw new EmailAlreadyExistsException("Email already registered");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

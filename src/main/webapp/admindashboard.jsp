@@ -1,3 +1,11 @@
+<%
+    String role = (String) session.getAttribute("role");
+    if (!"ADMIN".equals(role)) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -73,6 +81,20 @@
         .results-btn:hover {
             background: #4f63d4;
         }
+
+        .logout-btn {
+            display: inline-block;
+            padding: 12px 22px;
+            background: #d32f2f;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 10px;
+        }
+
+        .logout-btn:hover {
+            background: #b71c1c;
+        }
     </style>
 </head>
 
@@ -83,7 +105,7 @@
 
     <div class="container">
         <div class="welcome">
-            <h2>Welcome, Administrator! 👋</h2>
+            <h2>Welcome, Administrator!</h2>
             <p>Manage examinations, questions, students and results.</p>
         </div>
         <div class="cards">
@@ -95,12 +117,12 @@
             <div class="card">
                 <h2>Questions</h2>
                 <p>Add and manage exam questions.</p>
-                <a href="#" class="btn">Manage Questions</a>
+                <a href="manageExams.jsp" class="btn">Manage Questions</a>
             </div>
             <div class="card">
                 <h2>Students</h2>
                 <p>View registered students.</p>
-                <a href="#" class="btn">View Students</a>
+                <a href="viewStudents.jsp" class="btn">View Students</a>
             </div>
             <div class="card">
                 <h2>Results</h2>
@@ -108,6 +130,7 @@
                 <a href="adminResults.jsp" class="results-btn">View Student Results</a>
             </div>
         </div>
+        <a href="logout" class="logout-btn">Logout</a>
     </div>
 </body>
 </html>

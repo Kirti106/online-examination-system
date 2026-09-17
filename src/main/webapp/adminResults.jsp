@@ -92,7 +92,7 @@
 
 <div class="container">
 
-    <h1>📊 Student Results</h1>
+    <h1>Student Results</h1>
 
     <% if (results.isEmpty()) { %>
 
@@ -141,7 +141,7 @@
     <% } %>
 
     <a href="admindashboard.jsp" class="back-btn">
-        ← Back to Dashboard
+        Back to Dashboard
     </a>
 
 </div>
