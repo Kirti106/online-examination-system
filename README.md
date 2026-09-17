@@ -77,7 +77,7 @@ OnlineExaminationSystem
 │
 ├── pom.xml
 └── README.md
-
+```
 ## Installation and Setup
 
 ### Prerequisites
@@ -107,7 +107,6 @@ Create the required tables for:
 
 The application uses an environment variable named:
     DB_PASSWORD
-
 to access the MySQL database.
 
 Set the environment variable to your MySQL password before running the application. 
@@ -122,10 +121,7 @@ The generated WAR file will be located in:
 
 ### Deploy the Tomcat
 
-Copy the generated WAR file into the Tomcat: 
-    webapps
-
-folder.
+Copy the generated WAR file into the Tomcat: webapps
 
 Start Apache Tomcat and open the application in a web browser.
 
